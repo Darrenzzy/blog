@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>解决github多个帐号提交不同仓库</title>
+    <link href="/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/"/>
+    <url>/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h2 id="解决github多个帐号提交不同仓库"><a href="#解决github多个帐号提交不同仓库" class="headerlink" title="解决github多个帐号提交不同仓库"></a>解决github多个帐号提交不同仓库</h2><ul><li>经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种情况</li></ul><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ol><li>2个github帐号  如： account_one  , account_two</li><li>分别在两个帐号中添加两个仓库</li><li></li></ol>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2022/10/27/hello-world/"/>
     <url>/2022/10/27/hello-world/</url>
