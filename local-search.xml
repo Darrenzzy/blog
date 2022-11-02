@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>golang在arm64架构打包amd64镜像</title>
+    <link href="/2022/11/02/golang%E5%9C%A8arm64%E6%9E%B6%E6%9E%84%E6%89%93%E5%8C%85amd64%E9%95%9C%E5%83%8F/"/>
+    <url>/2022/11/02/golang%E5%9C%A8arm64%E6%9E%B6%E6%9E%84%E6%89%93%E5%8C%85amd64%E9%95%9C%E5%83%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">macOS</span>: <span class="hljs-number">12</span>.<span class="hljs-number">6</span> (Monterey)<span class="hljs-attribute">gcc</span> version: Apple clang version <span class="hljs-number">14</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> (arm64-apple-darwin21.<span class="hljs-number">6</span>.<span class="hljs-number">0</span>)<span class="hljs-attribute">Ubuntu</span>: <span class="hljs-number">16</span>.<span class="hljs-number">04</span>.<span class="hljs-number">6</span> LTS<span class="hljs-attribute">CentOS</span>: Linux release <span class="hljs-number">8</span>.<span class="hljs-number">4</span>.<span class="hljs-number">2105</span> (Core)</code></pre></div><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><div class="code-wrapper"><pre><code class="hljs">期望：在k8s上走流水线流程。过程：需要先依赖golang的镜像，来编译二进制文件，但是由于自己是M2 mac，官方拉去镜像后，打包到私有镜像仓库，然后在dockerfile中编写依赖，这时镜像编译成功，但是无法运行，会报错。</code></pre></div><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><div class="code-wrapper"><pre><code class="hljs">发现了问题就是在 mac M2 上打包镜像，如果不指定架构参数的话，会默认以arm架构打包镜像，最后打包出来的镜像，只能编译在arm机器上。所以这里拉去官方镜像后需要指定架构参数 ：--platform=linux/amd64</code></pre></div><p>最开始pull 公共镜像golang1.18</p><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> pull golang:<span class="hljs-number">1</span>.<span class="hljs-number">18</span></code></pre></div><div class="code-wrapper"><pre><code class="hljs livescript"><span class="hljs-comment"># dockefile</span>FROM --platform=linux/amd64 golang:<span class="hljs-number">1.18</span>-alpine3.<span class="hljs-number">16</span>RUN apk --<span class="hljs-literal">no</span>-cache add tzdata gcc <span class="hljs-string">\</span>    git <span class="hljs-string">\</span>    zlib-dev <span class="hljs-string">\</span>    zstd-libs <span class="hljs-string">\</span>    libsasl <span class="hljs-string">\</span>    lz4-dev <span class="hljs-string">\</span>    zstd-dev <span class="hljs-string">\</span>    libc-dev  &amp;&amp; <span class="hljs-string">\</span>    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp; <span class="hljs-string">\</span>    echo <span class="hljs-string">&quot;Asia/Shanghai&quot;</span> &gt; /etc/timezone</code></pre></div><div class="code-wrapper"><pre><code class="hljs">以这个dockerfile为基础镜像，然后在本地打包，push</code></pre></div><div class="code-wrapper"><pre><code class="hljs awk"><span class="hljs-comment"># arm mac 本地打包</span>docker build .<span class="hljs-regexp">/ -t [你的私有镜像registry].aliyuncs.com/</span>public/golang:<span class="hljs-number">1.18</span><span class="hljs-comment"># 打包完成后推送到私有仓库</span>docker push [你的私有镜像registry].aliyuncs.com<span class="hljs-regexp">/public/g</span>olang:<span class="hljs-number">1.18</span></code></pre></div><div class="code-wrapper"><pre><code class="hljs">推送完后，去镜像仓库检查下是否推送成功，然后下一步就是 玩 自己的业务代码dockerfile了，这里举个例子：</code></pre></div><div class="code-wrapper"><pre><code class="hljs">FROM  [你的私有镜像registry].aliyuncs.com/public/golang:1.18ADD netrc /root/.netrcWORKDIR /buildADD . /buildRUN GO111MODULE=on GOOS=linux GOARCH=amd64 CGO_ENABLED=1 GOPROXY=&quot;https://goproxy.cn,direct&quot; go build -o /bin/main -v -a -ldflags &#39;-w -s&#39; main.goWORKDIR /binENTRYPOINT [ &quot;coding&quot; ]</code></pre></div><p>然后整体流程就走通了</p><p>大家若遇到其他问题，可以留言，我会及时跟进解决方案。</p><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://github.com/docker/for-mac/issues/6356">https://github.com/docker/for-mac/issues/6356</a></p><p><a href="https://www.reddit.com/r/docker/comments/ray2wc/running_linuxamd64_images_on_linuxarm64/">https://www.reddit.com/r/docker/comments/ray2wc/running_linuxamd64_images_on_linuxarm64/</a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><div class="code-wrapper"><pre><code class="hljs">这次就是解决了再不同架构平台上打包镜像，然后依赖该镜像，在amd架构上运行的问题。要多看文档，多查资料，看issue，这样才有具体眉目，希望大家少走弯路。</code></pre></div>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>解决github多个帐号提交不同仓库</title>
     <link href="/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/"/>
     <url>/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/</url>
@@ -40,6 +53,30 @@
     
   </entry>
   
+  
+  
+  
+  
+  
+  <entry>
+    <title>about</title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[<h3 id="关于这里"><a href="#关于这里" class="headerlink" title="关于这里"></a>关于这里</h3><pre><code class="hljs">永远年轻,永远热泪盈眶。</code></pre>]]></content>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title></title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+  </entry>
   
   
   
