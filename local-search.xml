@@ -21,7 +21,7 @@
     <link href="/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/"/>
     <url>/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/</url>
     
-    <content type="html"><![CDATA[<h2 id="解决github多个帐号提交不同仓库"><a href="#解决github多个帐号提交不同仓库" class="headerlink" title="解决github多个帐号提交不同仓库"></a>解决github多个帐号提交不同仓库</h2><ul><li>经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种情况</li></ul><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ol><li>2个github帐号  如： account_one  , account_two</li><li>分别在两个帐号中添加两个仓库</li><li></li></ol>]]></content>
+    <content type="html"><![CDATA[<h2 id="解决github多个帐号提交不同仓库"><a href="#解决github多个帐号提交不同仓库" class="headerlink" title="解决github多个帐号提交不同仓库"></a>解决github多个帐号提交不同仓库</h2><ul><li>经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种不能提交的情况</li></ul><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ol><li>2个github帐号  如： account_one  , account_two</li><li>本地用ssh在 【~&#x2F;.ssh】 目录下生成2个帐号的公钥,分别复制两个账号 xxx.pub <div class="code-wrapper"><pre><code class="hljs bash">ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_one@github.com&quot;</span> -f ~/.ssh/id_rsa.account_onessh-keygen -t rsa -C <span class="hljs-string">&quot;account_two@github.com&quot;</span> -f ~/.ssh/id_rsa.account_two</code></pre></div></li><li>分别在两个github帐号中添加刚刚复制的公钥到两个仓库配置中，分别保存。<br><img src="/images/WechatIMG413.png"></li><li>重点：这一步完成后就是配置本地：【~&#x2F;ssh&#x2F;config】文件<div class="code-wrapper"><pre><code class="hljs conf"># github  account_one   Host github # 这里用一个别名github 来代替github.com 域名   HostName github.com   User account_one   PreferredAuthentications publickey  IdentityFile ~/.ssh/id_rsa.account_one# github account_two    Host github2  # 这里用一个别名github2 来代替github.com 域名   HostName github.com   User account_two   PreferredAuthentications publickey   IdentityFile ~/.ssh/id_rsa.account_two</code></pre></div></li><li>完成之后保存，然后测试是否成功<ul><li>·$$</li></ul></li></ol>]]></content>
     
     
     
@@ -63,7 +63,7 @@
     <link href="/"/>
     <url>/</url>
     
-    <content type="html"><![CDATA[<h3 id="关于这里"><a href="#关于这里" class="headerlink" title="关于这里"></a>关于这里</h3><pre><code class="hljs">永远年轻,永远热泪盈眶。</code></pre>]]></content>
+    <content type="html"><![CDATA[<h3 id="关于这里"><a href="#关于这里" class="headerlink" title="关于这里"></a>关于这里</h3><div class="code-wrapper"><pre><code class="hljs">永远年轻,永远热泪盈眶。</code></pre></div><ul><li>专注于Golang、云原生、Vue、React、软件架构、 开源社区</li></ul>]]></content>
     
   </entry>
   
