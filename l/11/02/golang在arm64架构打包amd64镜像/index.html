@@ -16,20 +16,17 @@
   <meta name="author" content="Darren">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决github多个帐号提交不同仓库 经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种不能提交的情况  准备 2个github帐号  如： account_one  , account_two 本地用ssh在 【~&#x2F;.ssh】 目录下生成2个帐号的公钥,分别复制两个账号 xxx.pub ssh-keygen -t rsa">
+    <meta name="description" content="环境macOS: 12.6 (Monterey) gcc version: Apple clang version 14.0.0 (arm64-apple-darwin21.6.0)  Ubuntu: 16.04.6 LTS CentOS: Linux release 8.4.2105 (Core)   背景期望：在k8s上走流水线流程。 过程：需要先依赖golang的镜像，来编译二进制文件，但是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="解决github多个帐号提交不同仓库">
-<meta property="og:url" content="http://blog.darrenzzy.cn/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/">
+<meta property="og:title" content="golang在arm64架构打包amd64镜像">
+<meta property="og:url" content="http://blog.darrenzzy.cn/2022/11/02/golang%E5%9C%A8arm64%E6%9E%B6%E6%9E%84%E6%89%93%E5%8C%85amd64%E9%95%9C%E5%83%8F/">
 <meta property="og:site_name" content="Darren的个人博客">
-<meta property="og:description" content="解决github多个帐号提交不同仓库 经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种不能提交的情况  准备 2个github帐号  如： account_one  , account_two 本地用ssh在 【~&#x2F;.ssh】 目录下生成2个帐号的公钥,分别复制两个账号 xxx.pub ssh-keygen -t rsa">
+<meta property="og:description" content="环境macOS: 12.6 (Monterey) gcc version: Apple clang version 14.0.0 (arm64-apple-darwin21.6.0)  Ubuntu: 16.04.6 LTS CentOS: Linux release 8.4.2105 (Core)   背景期望：在k8s上走流水线流程。 过程：需要先依赖golang的镜像，来编译二进制文件，但是">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.darrenzzy.cn/images/WechatIMG413.png">
-<meta property="og:image" content="http://blog.darrenzzy.cn/images/7271681910182.jpg">
-<meta property="article:published_time" content="2022-10-29T06:55:12.000Z">
-<meta property="article:modified_time" content="2023-04-19T13:19:50.576Z">
+<meta property="article:published_time" content="2022-11-02T11:26:22.000Z">
+<meta property="article:modified_time" content="2022-11-02T12:49:15.207Z">
 <meta property="article:author" content="Darren">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://blog.darrenzzy.cn/images/WechatIMG413.png">
 <meta name="twitter:creator" content="@darren_zzy">
 <meta name="twitter:site" content="https://twitter.com/Darren_zzy">
   
@@ -37,7 +34,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>解决github多个帐号提交不同仓库 - Darren的个人博客</title>
+  <title>golang在arm64架构打包amd64镜像 - Darren的个人博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -206,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="解决github多个帐号提交不同仓库"></span>
+            <span id="subtitle" data-typed-text="golang在arm64架构打包amd64镜像"></span>
           
         </div>
 
@@ -217,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-10-29 14:55" pubdate>
-          2022年10月29日 下午
+        <time datetime="2022-11-02 19:26" pubdate>
+          2022年11月2日 晚上
         </time>
       </span>
     
@@ -229,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          776 字
+          1.4k 字
         
       </span>
     
@@ -240,7 +237,7 @@
         
         
         
-          7 分钟
+          12 分钟
         
       </span>
     
@@ -278,43 +275,65 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">解决github多个帐号提交不同仓库</h1>
+            <h1 style="display: none">golang在arm64架构打包amd64镜像</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="解决github多个帐号提交不同仓库"><a href="#解决github多个帐号提交不同仓库" class="headerlink" title="解决github多个帐号提交不同仓库"></a>解决github多个帐号提交不同仓库</h2><ul>
-<li>经常遇到本地机器服务于多个github帐号&#x2F;gitlab&#x2F;codeup ，所以这里解决的就是这种不能提交的情况</li>
-</ul>
-<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ol>
-<li>2个github帐号  如： account_one  , account_two</li>
-<li>本地用ssh在 【~&#x2F;.ssh】 目录下生成2个帐号的公钥,分别复制两个账号 xxx.pub <div class="code-wrapper"><pre><code class="hljs bash">ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_one@github.com&quot;</span> -f ~/.ssh/id_rsa.account_one
+                <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">macOS</span>: <span class="hljs-number">12</span>.<span class="hljs-number">6</span> (Monterey)
+<span class="hljs-attribute">gcc</span> version: Apple clang version <span class="hljs-number">14</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span> (arm64-apple-darwin21.<span class="hljs-number">6</span>.<span class="hljs-number">0</span>)
 
-ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_two@github.com&quot;</span> -f ~/.ssh/id_rsa.account_two</code></pre></div></li>
-<li>分别在两个github帐号中添加刚刚复制的公钥到两个仓库配置中，分别保存。<br><img src="/images/WechatIMG413.png" srcset="/img/loading.gif" lazyload></li>
-<li>重点：这一步完成后就是配置本地：【~&#x2F;ssh&#x2F;config】文件<div class="code-wrapper"><pre><code class="hljs conf"># github  account_one
-   Host github # 这里用一个别名github 来代替github.com 域名
-   HostName github.com
-   User account_one
-   PreferredAuthentications publickey
-  IdentityFile ~/.ssh/id_rsa.account_one
+<span class="hljs-attribute">Ubuntu</span>: <span class="hljs-number">16</span>.<span class="hljs-number">04</span>.<span class="hljs-number">6</span> LTS
+<span class="hljs-attribute">CentOS</span>: Linux release <span class="hljs-number">8</span>.<span class="hljs-number">4</span>.<span class="hljs-number">2105</span> (Core)
+</code></pre></div>
 
-# github account_two 
-   Host github2  # 这里用一个别名github2 来代替github.com 域名
-   HostName github.com
-   User account_two
-   PreferredAuthentications publickey
-   IdentityFile ~/.ssh/id_rsa.account_two</code></pre></div></li>
-<li>完成之后保存，然后测试是否成功</li>
-</ol>
-<p><img src="/images/7271681910182.jpg" srcset="/img/loading.gif" lazyload></p>
-<ul>
-<li>以上是我个人情况， 用例可以是<ul>
-<li>ssh -T github </li>
-<li>ssh -T github2</li>
-</ul>
-</li>
-</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><div class="code-wrapper"><pre><code class="hljs">期望：在k8s上走流水线流程。
+过程：需要先依赖golang的镜像，来编译二进制文件，但是由于自己是M2 mac，官方拉去镜像后，打包到私有镜像仓库，然后在dockerfile中编写依赖，这时镜像编译成功，但是无法运行，会报错。
+</code></pre></div>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><div class="code-wrapper"><pre><code class="hljs">发现了问题就是在 mac M2 上打包镜像，如果不指定架构参数的话，会默认以arm架构打包镜像，最后打包出来的镜像，只能编译在arm机器上。所以这里拉去官方镜像后需要指定架构参数 ：--platform=linux/amd64
+</code></pre></div>
+<p>最开始pull 公共镜像golang1.18</p>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> pull golang:<span class="hljs-number">1</span>.<span class="hljs-number">18</span></code></pre></div>
+
+<div class="code-wrapper"><pre><code class="hljs livescript"><span class="hljs-comment"># dockefile</span>
+FROM --platform=linux/amd64 golang:<span class="hljs-number">1.18</span>-alpine3.<span class="hljs-number">16</span>
+RUN apk --<span class="hljs-literal">no</span>-cache add tzdata gcc <span class="hljs-string">\</span>
+    git <span class="hljs-string">\</span>
+    zlib-dev <span class="hljs-string">\</span>
+    zstd-libs <span class="hljs-string">\</span>
+    libsasl <span class="hljs-string">\</span>
+    lz4-dev <span class="hljs-string">\</span>
+    zstd-dev <span class="hljs-string">\</span>
+    libc-dev  &amp;&amp; <span class="hljs-string">\</span>
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp; <span class="hljs-string">\</span>
+    echo <span class="hljs-string">&quot;Asia/Shanghai&quot;</span> &gt; /etc/timezone
+</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs">以这个dockerfile为基础镜像，然后在本地打包，push
+</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs awk"><span class="hljs-comment"># arm mac 本地打包</span>
+
+docker build .<span class="hljs-regexp">/ -t [你的私有镜像registry].aliyuncs.com/</span>public/golang:<span class="hljs-number">1.18</span>
+
+<span class="hljs-comment"># 打包完成后推送到私有仓库</span>
+docker push [你的私有镜像registry].aliyuncs.com<span class="hljs-regexp">/public/g</span>olang:<span class="hljs-number">1.18</span></code></pre></div>
+
+<div class="code-wrapper"><pre><code class="hljs">推送完后，去镜像仓库检查下是否推送成功，然后下一步就是 玩 自己的业务代码dockerfile了，这里举个例子：
+</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs">FROM  [你的私有镜像registry].aliyuncs.com/public/golang:1.18
+ADD netrc /root/.netrc
+WORKDIR /build
+ADD . /build
+RUN GO111MODULE=on GOOS=linux GOARCH=amd64 CGO_ENABLED=1 GOPROXY=&quot;https://goproxy.cn,direct&quot; go build -o /bin/main -v -a -ldflags &#39;-w -s&#39; main.go
+WORKDIR /bin
+ENTRYPOINT [ &quot;coding&quot; ]
+</code></pre></div>
+<p>然后整体流程就走通了</p>
+<p>大家若遇到其他问题，可以留言，我会及时跟进解决方案。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://github.com/docker/for-mac/issues/6356">https://github.com/docker/for-mac/issues/6356</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/docker/comments/ray2wc/running_linuxamd64_images_on_linuxarm64/">https://www.reddit.com/r/docker/comments/ray2wc/running_linuxamd64_images_on_linuxarm64/</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><div class="code-wrapper"><pre><code class="hljs">这次就是解决了再不同架构平台上打包镜像，然后依赖该镜像，在amd架构上运行的问题。
+要多看文档，多查资料，看issue，这样才有具体眉目，希望大家少走弯路。
+</code></pre></div>
 
                 
               </div>
@@ -332,8 +351,8 @@ ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_two@github.com&quot
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>解决github多个帐号提交不同仓库</div>
-      <div>http://blog.darrenzzy.cn/2022/10/29/解决github多个帐号提交不同仓库/</div>
+      <div>golang在arm64架构打包amd64镜像</div>
+      <div>http://blog.darrenzzy.cn/2022/11/02/golang在arm64架构打包amd64镜像/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +364,7 @@ ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_two@github.com&quot
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年10月29日</div>
+          <div>2022年11月2日</div>
         </div>
       
       
@@ -377,18 +396,12 @@ ssh-keygen -t rsa -C <span class="hljs-string">&quot;account_two@github.com&quot
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/02/golang%E5%9C%A8arm64%E6%9E%B6%E6%9E%84%E6%89%93%E5%8C%85amd64%E9%95%9C%E5%83%8F/" title="golang在arm64架构打包amd64镜像">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">golang在arm64架构打包amd64镜像</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/10/27/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/10/29/%E8%A7%A3%E5%86%B3github%E5%A4%9A%E4%B8%AA%E5%B8%90%E5%8F%B7%E6%8F%90%E4%BA%A4%E4%B8%8D%E5%90%8C%E4%BB%93%E5%BA%93/" title="解决github多个帐号提交不同仓库">
+                        <span class="hidden-mobile">解决github多个帐号提交不同仓库</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
